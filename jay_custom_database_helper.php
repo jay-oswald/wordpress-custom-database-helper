@@ -150,6 +150,15 @@ abstract class jay_custom_database_helper{
         $wpdb->update($this->table_name, $data, $where, $format, $where_format);
     }
 
+    public function update_by_id($data, $id){
+        if(!isset($this->fields['id']))
+            throw new Exception("You are trying to update by id but table {$this->table_name} does not have an id");
+
+        $where = ['id' => $id];
+
+        $this->update($data,$where);
+    }
+
     protected function get_formats($data){
         $formats = [];
         foreach($data as $column=>$value){
