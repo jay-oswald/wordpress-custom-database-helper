@@ -3,12 +3,14 @@
 class example_custom_database extends jay_custom_database_helper{
 
     public function __construct(){
-        $this->latest_version = 2;
+        $this->latest_version = 3;
 
         $this->fields[] = new jay_custom_database_helper_field('id', '%d');
-        $this->fields[] = new jay_custom_database_helper_field('name', '%s', true,null);
-        $this->fields[] = new jay_custom_database_helper_field('price', '%d', true, null);
+        $this->fields[] = new jay_custom_database_helper_field('name', '%s', true);
+        $this->fields[] = new jay_custom_database_helper_field('price', '%d', true);
         $this->fields[] = new jay_custom_database_helper_field('description', '%s');
+        $this->fields[] = new jay_custom_database_helper_field('datetime', '%s', false, current_time('mysql', 0));
+        $this->fields[] = new jay_custom_database_helper_field('datetime_utc', '%s', false, current_time('mysql', 1));
 
 
         parent::__construct('test_database');
@@ -30,7 +32,13 @@ class example_custom_database extends jay_custom_database_helper{
             case 2:
                 return "{$alter_table}
                 ADD
-                description TEXT NOT NULL
+                description TEXT NULL
+                AFTER price;";
+            case 3:
+                return "{$alter_table}
+                ADD
+                datetime DATETIME NULL,
+                datetime_utc DATETIME NULL
                 AFTER price;";
             default:
                 throw new Exception('Trying to get version SQL update for version ' . $target_version . ' for datbase ' . $this->table_name);
