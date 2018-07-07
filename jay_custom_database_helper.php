@@ -35,7 +35,7 @@ abstract class jay_custom_database_helper{
     }
 
     protected function maybe_update_database(){
-        $current_version = get_option($this->version_option_name,false);
+        $current_version = (int)get_option($this->version_option_name,false);
 
         if($current_version == $this->latest_version){
             return true;
