@@ -5,6 +5,12 @@ class example_custom_database extends jay_custom_database_helper{
     public function __construct(){
         $this->latest_version = 2;
 
+        $this->fields[] = new jay_custom_database_helper_field('id', '%d');
+        $this->fields[] = new jay_custom_database_helper_field('name', '%s', true,null);
+        $this->fields[] = new jay_custom_database_helper_field('price', '%d', true, null);
+        $this->fields[] = new jay_custom_database_helper_field('description', '%s');
+
+
         parent::__construct('test_database');
     }
 
