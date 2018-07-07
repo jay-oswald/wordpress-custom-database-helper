@@ -2,6 +2,7 @@
 
 abstract class jay_custom_database_helper{
     protected $table_name;
+    protected $table_name_without_prefix;
     protected $version_option_name;
 
     protected $latest_version;
@@ -12,6 +13,7 @@ abstract class jay_custom_database_helper{
     protected $fields;
 
     public function __construct($table_name){
+        $this->table_name_without_prefix = $table_name;
         global $wpdb;
         $this->table_name = $wpdb->prefix . $table_name;
         $this->version_option_name = $this->table_name . '_database_version';
@@ -26,6 +28,9 @@ abstract class jay_custom_database_helper{
         foreach($this->fields as $field_name => $data){
             $this->fields[$data->name] = $data;
             unset($this->fields[$field_name]);
+
+            $filter_name = "{$this->table_name}_{$data->name}_default";
+            $this->fields[$data->name]->default = apply_filters($filter_name, $this->fields[$data->name]->default);
         }
     }
 
