@@ -6,6 +6,11 @@ abstract class jay_custom_database_helper{
 
     protected $latest_version;
 
+    /**
+     * @var jay_custom_database_helper_field[]
+     */
+    protected $fields;
+
     public function __construct($table_name){
         global $wpdb;
         $this->table_name = $wpdb->prefix . $table_name;
