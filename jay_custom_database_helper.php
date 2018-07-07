@@ -135,7 +135,7 @@ abstract class jay_custom_database_helper{
         if(!$result)
             throw new Exception("Error inserting row into table {$this->table_name} mysql error message: {$wpdb->last_error}");
 
-        return $result;
+        return $wpdb->insert_id;
     }
 
     public function update($data, $where){
