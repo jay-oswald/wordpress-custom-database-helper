@@ -21,6 +21,12 @@ abstract class jay_custom_database_helper{
         } catch (Exception $e){
             $this->handle_errors($e);
         }
+
+        //TODO see if there is a more efficient way of doing this
+        foreach($this->fields as $field_name => $data){
+            $this->fields[$data->name] = $data;
+            unset($this->fields[$field_name]);
+        }
     }
 
     protected function maybe_update_database(){
