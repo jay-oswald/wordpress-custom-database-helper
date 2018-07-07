@@ -95,7 +95,8 @@ abstract class jay_custom_database_helper{
     protected function does_table_exist(){
         global $wpdb;
 
-        $result = $wpdb->get_var("SHOW TABLES LIKE '{$this->table_name}';",1,1);
+        $query = "SHOW TABLES LIKE '{$this->table_name}';";
+        $result = $wpdb->get_var($query,0,0);
 
         if($result)
             return true;
