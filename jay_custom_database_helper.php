@@ -88,20 +88,6 @@ abstract class jay_custom_database_helper{
     }
 
     abstract protected function get_upgrade_sql($target_version);
-    /*
-    Sample of recommended function, needs to return SQL to create/update database
-
-    switch($target_version){
-        case 1:
-            //returns initial create table sql
-            return true;
-        case 2:
-            //For each new version, add SQL to update database and return it
-            return true;
-        default:
-            throw new Exception('Trying to get version SQL update for version ' . $target_version . ' for datbase ' . $this->table_name);
-    }
-    */
 
     protected function handle_errors(Exception $e){
         if( current_user_can('administrator')){
