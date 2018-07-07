@@ -105,4 +105,35 @@ abstract class jay_custom_database_helper{
             echo $e->getMessage();
         }
     }
+
+    public function insert($data){
+        foreach($this->fields as $field){
+            if(!$field->required)
+                continue;
+
+            if(!isset($data[$field->name]))
+                throw new Exception('Need to pass field ' . $field->name . ' to insert into ' . $this->table_name);
+            if(is_null($data[$field->name]))
+                throw new Exception('NULL does not count as a value for field ' . $field->name . ' to insert into ' . $this->table_name);
+        }
+
+        $formats = [];
+        foreach($data as $column=>$value){
+            if(!isset($this->fields[$column]))
+                throw new Exception("You are trying to insert column {$column} into table {$this->table_name} where it does not exist");
+
+            if(is_null($value))
+                $data[$column] = $this->fields[$column]->default;
+
+            $formats[] = $this->fields[$column]->format;
+        }
+
+        global $wpdb;
+        $result = $wpdb->insert($this->table_name, $data, $formats);
+
+        if(!$result)
+            throw new Exception("Error inserting row into table {$this->table_name} mysql error message: {$wpdb->last_error}");
+
+        return $result;
+    }
 }
