@@ -122,15 +122,11 @@ abstract class jay_custom_database_helper{
                 throw new Exception('NULL does not count as a value for field ' . $field->name . ' to insert into ' . $this->table_name);
         }
 
-        $formats = [];
-        foreach($data as $column=>$value){
-            if(!isset($this->fields[$column]))
-                throw new Exception("You are trying to insert column {$column} into table {$this->table_name} where it does not exist");
+        $formats = $this->get_formats($data);
 
+        foreach($data as $column=>$value){
             if(is_null($value))
                 $data[$column] = $this->fields[$column]->default;
-
-            $formats[] = $this->fields[$column]->format;
         }
 
         global $wpdb;
@@ -143,23 +139,24 @@ abstract class jay_custom_database_helper{
     }
 
     public function update($data, $where){
-        $format = [];
-        foreach($data as $column=>$value){
-            if(!isset($this->fields[$column]))
-                throw new Exception("You are trying to update column {$column} in table {$this->table_name} where it does not exist");
-            $format[] = $this->fields[$column]->format;
-        }
+        $format = $this->get_formats($data);
 
         if(sizeof($where) == 0)
             throw new Exception("You are trying to update {$this->table_name} without any where condition");
-        $where_format = [];
-        foreach($where as $column=>$value){
-            if(!isset($this->fields[$column]))
-                throw new Exception("You are trying to use column {$column} in where condition to update table {$this->table_name} where it does not exist");
-            $where_format[] = $this->fields[$column]->format;
-        }
+
+        $where_format = $this->get_formats($where);
 
         global $wpdb;
         $wpdb->update($this->table_name, $data, $where, $format, $where_format);
+    }
+
+    protected function get_formats($data){
+        $formats = [];
+        foreach($data as $column=>$value){
+            if(!isset($this->fields[$column]))
+                throw new Exception("You are trying to use column {$column} in table {$this->table_name} which does not exist");
+            $formats[] = $this->fields[$column]->format;
+        }
+        return $formats;
     }
 }
