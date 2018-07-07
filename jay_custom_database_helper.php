@@ -164,6 +164,16 @@ abstract class jay_custom_database_helper{
         $this->update($data,$where);
     }
 
+    public function query($query){
+        global $wpdb;
+        $result = $wpdb->query($query);
+
+        if($result == false) //returns num rows effected, so returns 0 if no rows effected
+            throw new Exception("Error running query on {$this->table_name}, mysql error: {$wpdb->last_error}");
+
+        return $result;
+    }
+
     protected function get_formats($data){
         $formats = [];
         foreach($data as $column=>$value){
