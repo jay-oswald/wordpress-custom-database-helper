@@ -141,4 +141,25 @@ abstract class jay_custom_database_helper{
 
         return $result;
     }
+
+    public function update($data, $where){
+        $format = [];
+        foreach($data as $column=>$value){
+            if(!isset($this->fields[$column]))
+                throw new Exception("You are trying to update column {$column} in table {$this->table_name} where it does not exist");
+            $format[] = $this->fields[$column]->format;
+        }
+
+        if(sizeof($where) == 0)
+            throw new Exception("You are trying to update {$this->table_name} without any where condition");
+        $where_format = [];
+        foreach($where as $column=>$value){
+            if(!isset($this->fields[$column]))
+                throw new Exception("You are trying to use column {$column} in where condition to update table {$this->table_name} where it does not exist");
+            $where_format[] = $this->fields[$column]->format;
+        }
+
+        global $wpdb;
+        $wpdb->update($this->table_name, $data, $where, $format, $where_format);
+    }
 }
