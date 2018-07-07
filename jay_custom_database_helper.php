@@ -114,6 +114,9 @@ abstract class jay_custom_database_helper{
 
     public function insert($data){
         foreach($this->fields as $field){
+            if(!isset($data[$field->name]) && !is_null($field->default))
+                $data[$field->name] = $field->default;
+
             if(!$field->required)
                 continue;
 
