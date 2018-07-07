@@ -147,7 +147,12 @@ abstract class jay_custom_database_helper{
         $where_format = $this->get_formats($where);
 
         global $wpdb;
-        $wpdb->update($this->table_name, $data, $where, $format, $where_format);
+        $result = $wpdb->update($this->table_name, $data, $where, $format, $where_format);
+
+        if(!$result)
+            throw new Exception("Update failed for table {$this->table_name}, mysql error: {$wpdb->last_error}");
+
+        return $result;
     }
 
     public function update_by_id($data, $id){
