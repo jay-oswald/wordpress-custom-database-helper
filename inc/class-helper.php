@@ -120,30 +120,37 @@ abstract class Helper {
 
 	public function insert( $data ) {
 		foreach ( $this->fields as $field ) {
-			if ( ! isset( $data[ $field->name ] ) && ! is_null( $field->default ) )
+			if ( ! isset( $data[ $field->name ] ) && ! is_null( $field->default ) ) {
 				$data[ $field->name ] = $field->default;
+			}
 
-			if ( ! $field->required )
+			if ( ! $field->required ) {
 				continue;
+			}
 
-			if ( ! isset( $data[ $field->name ] ) )
+			if ( ! isset( $data[ $field->name ] ) ) {
 				throw new Exception( 'Need to pass field ' . $field->name . ' to insert into ' . $this->table_name );
-			if ( is_null( $data[ $field->name ] ) )
+			}
+
+			if ( is_null( $data[ $field->name ] ) ) {
 				throw new Exception( 'NULL does not count as a value for field ' . $field->name . ' to insert into ' . $this->table_name );
+			}
 		}
 
 		$formats = $this->get_formats( $data );
 
 		foreach ( $data as $column => $value ) {
-			if ( is_null( $value ) )
+			if ( is_null( $value ) ) {
 				$data[ $column ] = $this->fields[ $column ]->default;
+			}
 		}
 
 		global $wpdb;
 		$result = $wpdb->insert( $this->table_name, $data, $formats );
 
-		if ( ! $result )
+		if ( ! $result ) {
 			throw new Exception( "Error inserting row into table {$this->table_name} mysql error message: {$wpdb->last_error}" );
+		}
 
 		return $wpdb->insert_id;
 	}
@@ -151,23 +158,26 @@ abstract class Helper {
 	public function update( $data, $where ) {
 		$format = $this->get_formats( $data );
 
-		if ( sizeof( $where ) === 0 )
+		if ( sizeof( $where ) === 0 ) {
 			throw new Exception( "You are trying to update {$this->table_name} without any where condition" );
+		}
 
 		$where_format = $this->get_formats( $where );
 
 		global $wpdb;
 		$result = $wpdb->update( $this->table_name, $data, $where, $format, $where_format );
 
-		if ( ! $result )
+		if ( ! $result ) {
 			throw new Exception( "Update failed for table {$this->table_name}, mysql error: {$wpdb->last_error}" );
+		}
 
 		return $result;
 	}
 
 	public function update_by_id( $data, $id ) {
-		if ( ! isset( $this->fields['id'] ) )
+		if ( ! isset( $this->fields['id'] ) ) {
 			throw new Exception( "You are trying to update by id but table {$this->table_name} does not have an id" );
+		}
 
 		$where = [ 'id' => $id ];
 
@@ -179,7 +189,9 @@ abstract class Helper {
 		$result = $wpdb->query( $query );
 
 		if ( $result === false ) //returns num rows effected, so returns 0 if no rows effected
+		{
 			throw new Exception( "Error running query on {$this->table_name}, mysql error: {$wpdb->last_error}" );
+		}
 
 		return $result;
 	}
@@ -187,8 +199,9 @@ abstract class Helper {
 	protected function get_formats( $data ) {
 		$formats = [];
 		foreach ( $data as $column => $value ) {
-			if ( ! isset( $this->fields[ $column ] ) )
+			if ( ! isset( $this->fields[ $column ] ) ) {
 				throw new Exception( "You are trying to use column {$column} in table {$this->table_name} which does not exist" );
+			}
 			$formats[] = $this->fields[ $column ]->format;
 		}
 		return $formats;
