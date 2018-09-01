@@ -77,21 +77,24 @@ abstract class Helper {
 
 		$result = $wpdb->query( $sql );
 
-		if ( ! $result )
+		if ( ! $result ) {
 			throw new Exception( 'Could not upgrade database ' . $this->table_name . ' to version ' . $target_version );
+		}
 	}
 
 	protected function initalise_database() {
 		global $wpdb;
 
-		if ( $this->does_table_exist() )
+		if ( $this->does_table_exist() ) {
 			throw new Exception( 'Database ' . $this->table_name . ' already exists' );
+		}
 
 		$sql    = $this->get_upgrade_sql( 1 );
 		$result = $wpdb->query( $sql );
 
-		if ( ! $result )
+		if ( ! $result ) {
 			throw new Exception( 'Could not create database ' . $this->table_name );
+		}
 	}
 
 	protected function does_table_exist() {
@@ -100,10 +103,11 @@ abstract class Helper {
 		$query  = "SHOW TABLES LIKE '{$this->table_name}';";
 		$result = $wpdb->get_var( $query, 0, 0 );
 
-		if ( $result )
+		if ( $result ) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
 
 	abstract protected function get_upgrade_sql( $target_version );
@@ -147,7 +151,7 @@ abstract class Helper {
 	public function update( $data, $where ) {
 		$format = $this->get_formats( $data );
 
-		if ( sizeof( $where ) == 0 )
+		if ( sizeof( $where ) === 0 )
 			throw new Exception( "You are trying to update {$this->table_name} without any where condition" );
 
 		$where_format = $this->get_formats( $where );
@@ -162,7 +166,7 @@ abstract class Helper {
 	}
 
 	public function update_by_id( $data, $id ) {
-		if ( ! isset( $this->fields[ 'id' ] ) )
+		if ( ! isset( $this->fields['id'] ) )
 			throw new Exception( "You are trying to update by id but table {$this->table_name} does not have an id" );
 
 		$where = [ 'id' => $id ];
@@ -174,7 +178,7 @@ abstract class Helper {
 		global $wpdb;
 		$result = $wpdb->query( $query );
 
-		if ( $result == false ) //returns num rows effected, so returns 0 if no rows effected
+		if ( $result === false ) //returns num rows effected, so returns 0 if no rows effected
 			throw new Exception( "Error running query on {$this->table_name}, mysql error: {$wpdb->last_error}" );
 
 		return $result;
