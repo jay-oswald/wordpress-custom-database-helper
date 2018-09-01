@@ -75,7 +75,7 @@ abstract class Helper {
 			throw new Exception( 'Could not get SQL version ' . $target_version . ' for database ' . $this->table_name );
 		}
 
-		$result = $wpdb->query( $sql );
+		$result = $wpdb->query( $wpdb->prepare( $sql, [] ) );
 
 		if ( ! $result ) {
 			throw new Exception( 'Could not upgrade database ' . $this->table_name . ' to version ' . $target_version );
@@ -90,7 +90,7 @@ abstract class Helper {
 		}
 
 		$sql    = $this->get_upgrade_sql( 1 );
-		$result = $wpdb->query( $sql );
+		$result = $wpdb->query( $wpdb->prepare( $sql, [] ) );
 
 		if ( ! $result ) {
 			throw new Exception( 'Could not create database ' . $this->table_name );
@@ -100,8 +100,9 @@ abstract class Helper {
 	protected function does_table_exist() {
 		global $wpdb;
 
-		$query  = "SHOW TABLES LIKE '{$this->table_name}';";
-		$result = $wpdb->get_var( $query, 0, 0 );
+		$query  = "SHOW TABLES LIKE '%s';";
+		$values = [$this->table_name];
+		$result = $wpdb->get_var( $wpdb->prepare( $query, $values ), 0, 0 );
 
 		if ( $result ) {
 			return true;
@@ -186,7 +187,7 @@ abstract class Helper {
 
 	public function query( $query ) {
 		global $wpdb;
-		$result  = $wpdb->query( $wpdb->prepare( $query, [] ) );
+		$result = $wpdb->query( $wpdb->prepare( $query, [] ) );
 
 		if ( $result === false ) { //returns num rows effected, so returns 0 if no rows effected
 			throw new Exception( "Error running query on {$this->table_name}, mysql error: {$wpdb->last_error}" );
