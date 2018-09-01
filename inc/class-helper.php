@@ -80,7 +80,7 @@ abstract class Helper {
 	protected function does_table_exist() {
 		global $wpdb;
 
-		$result = $wpdb->prepare( "SHOW TABLES LIKE '%s';", [ $this->table_name ] );
+		$result = $wpdb->prepare( 'SHOW TABLES LIKE %s;', [ $this->table_name ] );
 
 		if ( $result ) {
 			return true;
