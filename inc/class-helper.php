@@ -1,5 +1,6 @@
 <?php
 NameSpace Jay\Custom\Database;
+
 abstract class Helper {
 	protected $table_name;
 	protected $table_name_without_prefix;
