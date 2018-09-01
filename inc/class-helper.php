@@ -1,6 +1,6 @@
 <?php
 
-NameSpace Jay\Custom\Database;
+namespace Jay\Custom\Database;
 
 abstract class Helper {
 	protected $table_name;
@@ -37,7 +37,7 @@ abstract class Helper {
 	}
 
 	protected function maybe_update_database() {
-		$current_version = (int)get_option( $this->version_option_name, false );
+		$current_version = (int) get_option( $this->version_option_name, false );
 
 		if ( $current_version === $this->latest_version ) {
 			return true;
@@ -50,7 +50,7 @@ abstract class Helper {
 			add_option( $this->version_option_name, $current_version, '', true );
 		}
 
-		if ( !$this->does_table_exist() ) {
+		if ( ! $this->does_table_exist() ) {
 			throw new Exception( 'Trying to update database ' . $this->table_name . ' but it does not exist' );
 		}
 
@@ -71,13 +71,13 @@ abstract class Helper {
 		global $wpdb;
 
 		$sql = $this->get_upgrade_sql( $target_version );
-		if ( !$sql ) {
+		if ( ! $sql ) {
 			throw new Exception( 'Could not get SQL version ' . $target_version . ' for database ' . $this->table_name );
 		}
 
 		$result = $wpdb->query( $sql );
 
-		if ( !$result )
+		if ( ! $result )
 			throw new Exception( 'Could not upgrade database ' . $this->table_name . ' to version ' . $target_version );
 	}
 
@@ -90,7 +90,7 @@ abstract class Helper {
 		$sql = $this->get_upgrade_sql( 1 );
 		$result = $wpdb->query( $sql );
 
-		if ( !$result )
+		if ( ! $result )
 			throw new Exception( 'Could not create database ' . $this->table_name );
 	}
 
@@ -116,13 +116,13 @@ abstract class Helper {
 
 	public function insert( $data ) {
 		foreach ( $this->fields as $field ) {
-			if ( !isset( $data[ $field->name ] ) && !is_null( $field->default ) )
+			if ( ! isset( $data[ $field->name ] ) && ! is_null( $field->default ) )
 				$data[ $field->name ] = $field->default;
 
-			if ( !$field->required )
+			if ( ! $field->required )
 				continue;
 
-			if ( !isset( $data[ $field->name ] ) )
+			if ( ! isset( $data[ $field->name ] ) )
 				throw new Exception( 'Need to pass field ' . $field->name . ' to insert into ' . $this->table_name );
 			if ( is_null( $data[ $field->name ] ) )
 				throw new Exception( 'NULL does not count as a value for field ' . $field->name . ' to insert into ' . $this->table_name );
@@ -138,7 +138,7 @@ abstract class Helper {
 		global $wpdb;
 		$result = $wpdb->insert( $this->table_name, $data, $formats );
 
-		if ( !$result )
+		if ( ! $result )
 			throw new Exception( "Error inserting row into table {$this->table_name} mysql error message: {$wpdb->last_error}" );
 
 		return $wpdb->insert_id;
@@ -155,14 +155,14 @@ abstract class Helper {
 		global $wpdb;
 		$result = $wpdb->update( $this->table_name, $data, $where, $format, $where_format );
 
-		if ( !$result )
+		if ( ! $result )
 			throw new Exception( "Update failed for table {$this->table_name}, mysql error: {$wpdb->last_error}" );
 
 		return $result;
 	}
 
 	public function update_by_id( $data, $id ) {
-		if ( !isset( $this->fields[ 'id' ] ) )
+		if ( ! isset( $this->fields[ 'id' ] ) )
 			throw new Exception( "You are trying to update by id but table {$this->table_name} does not have an id" );
 
 		$where = [ 'id' => $id ];
@@ -183,7 +183,7 @@ abstract class Helper {
 	protected function get_formats( $data ) {
 		$formats = [];
 		foreach ( $data as $column => $value ) {
-			if ( !isset( $this->fields[ $column ] ) )
+			if ( ! isset( $this->fields[ $column ] ) )
 				throw new Exception( "You are trying to use column {$column} in table {$this->table_name} which does not exist" );
 			$formats[] = $this->fields[ $column ]->format;
 		}
