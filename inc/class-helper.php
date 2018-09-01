@@ -17,8 +17,8 @@ abstract class Helper {
 	public function __construct( $table_name ) {
 		global $wpdb;
 		$this->table_name_without_prefix = $table_name;
-		$this->table_name = $wpdb->prefix . $table_name;
-		$this->version_option_name = $this->table_name . '_database_version';
+		$this->table_name                = $wpdb->prefix . $table_name;
+		$this->version_option_name       = $this->table_name . '_database_version';
 
 		try {
 			$this->maybe_update_database();
@@ -31,7 +31,7 @@ abstract class Helper {
 			$this->fields[ $data->name ] = $data;
 			unset( $this->fields[ $field_name ] );
 
-			$filter_name = "{$this->table_name}_{$data->name}_default";
+			$filter_name                          = "{$this->table_name}_{$data->name}_default";
 			$this->fields[ $data->name ]->default = apply_filters( $filter_name, $this->fields[ $data->name ]->default );
 		}
 	}
@@ -87,7 +87,7 @@ abstract class Helper {
 		if ( $this->does_table_exist() )
 			throw new Exception( 'Database ' . $this->table_name . ' already exists' );
 
-		$sql = $this->get_upgrade_sql( 1 );
+		$sql    = $this->get_upgrade_sql( 1 );
 		$result = $wpdb->query( $sql );
 
 		if ( ! $result )
@@ -97,7 +97,7 @@ abstract class Helper {
 	protected function does_table_exist() {
 		global $wpdb;
 
-		$query = "SHOW TABLES LIKE '{$this->table_name}';";
+		$query  = "SHOW TABLES LIKE '{$this->table_name}';";
 		$result = $wpdb->get_var( $query, 0, 0 );
 
 		if ( $result )
