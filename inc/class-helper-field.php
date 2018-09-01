@@ -1,4 +1,5 @@
 <?php
+
 namespace Jay\Custom\Database;
 
 class Helper_Field {
@@ -7,7 +8,7 @@ class Helper_Field {
 	public $required;
 	public $default;
 
-	public function __construct ( $name, $format, $required = false, $default = null ) {
+	public function __construct( $name, $format, $required = false, $default = null ) {
 		$this->name     = $name;
 		$this->format   = $format;
 		$this->required = $required;

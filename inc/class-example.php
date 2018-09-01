@@ -4,21 +4,20 @@ namespace Jay\Custom\Database;
 
 class Example extends Helper {
 
-	public function __construct () {
+	public function __construct() {
 		$this->latest_version = 3;
 
 		$this->fields[] = new Helper_Field( 'id', '%d' );
 		$this->fields[] = new Helper_Field( 'name', '%s', true );
 		$this->fields[] = new Helper_Field( 'price', '%d', true );
 		$this->fields[] = new Helper_Field( 'description', '%s' );
-		$this->fields[] = new Helper_Field( 'datetime', '%s', false, current_time( 'mysql', 0) );
+		$this->fields[] = new Helper_Field( 'datetime', '%s', false, current_time( 'mysql', 0 ) );
 		$this->fields[] = new Helper_Field( 'datetime_utc', '%s', false, current_time( 'mysql', 1 ) );
 
-
-		parent::__construct ( 'test_database' );
+		parent::__construct( 'test_database' );
 	}
 
-	protected function get_upgrade_sql ( $target_version ) {
+	protected function get_upgrade_sql( $target_version ) {
 
 		$alter_table = "ALTER TABLE {$this->table_name} ";
 
@@ -43,7 +42,7 @@ class Example extends Helper {
                 datetime_utc DATETIME NULL
                 AFTER price;";
 			default:
-				throw new Exception ( 'Trying to get version SQL update for version ' . $target_version . ' for datbase ' . $this->table_name );
+				throw new Exception( 'Trying to get version SQL update for version ' . $target_version . ' for datbase ' . $this->table_name );
 		}
 	}
 }
