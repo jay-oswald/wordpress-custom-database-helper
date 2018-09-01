@@ -74,15 +74,13 @@ abstract class Helper {
 			throw new Exception( 'Database ' . $this->table_name . ' already exists' );
 		}
 
-		$this->upgrade_database_version(1 );
+		$this->upgrade_database_version( 1 );
 	}
 
 	protected function does_table_exist() {
 		global $wpdb;
 
-		$find_tables = "SHOW TABLES LIKE '%s';";
-		$values      = [ $this->table_name ];
-		$result      = $wpdb->prepare( $find_tables, $values );
+		$result = $wpdb->prepare( "SHOW TABLES LIKE '%s';", [ $this->table_name ] );
 
 		if ( $result ) {
 			return true;
@@ -157,17 +155,6 @@ abstract class Helper {
 		$where = [ 'id' => $id ];
 
 		$this->update( $data, $where );
-	}
-
-	public function query( $query ) {
-		global $wpdb;
-		$result = $wpdb->query( $wpdb->prepare( $query, [] ) );
-
-		if ( $result === false ) { //returns num rows effected, so returns 0 if no rows effected
-			throw new Exception( "Error running query on {$this->table_name}, mysql error: {$wpdb->last_error}" );
-		}
-
-		return $result;
 	}
 
 	protected function get_formats( $data ) {

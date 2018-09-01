@@ -29,14 +29,14 @@ class Example extends Helper {
                   PRIMARY KEY (id)
                 )
                 ENGINE = InnoDB
-                ;', [ $this->table_name, ] );
+                ;', [ $this->table_name ] );
 				break;
 			case 2:
 				$result = $wpdb->prepare( 'ALTER TABLE %s
 				ADD
                 description TEXT NULL
                 AFTER price
-				;', [ $this->table_name, ] );
+				;', [ $this->table_name ] );
 				break;
 			case 3:
 				$result = $wpdb->prepare( 'ALTER TABLE %s
