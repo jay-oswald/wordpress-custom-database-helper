@@ -75,7 +75,7 @@ abstract class Helper {
 			throw new Exception( 'Could not get SQL version ' . $target_version . ' for database ' . $this->table_name );
 		}
 
-		$result = $wpdb->query( $wpdb->prepare( $sql, [] ) );
+		$result = $wpdb->prepare( $sql, [] );
 
 		if ( ! $result ) {
 			throw new Exception( 'Could not upgrade database ' . $this->table_name . ' to version ' . $target_version );
@@ -90,7 +90,7 @@ abstract class Helper {
 		}
 
 		$sql    = $this->get_upgrade_sql( 1 );
-		$result = $wpdb->query( $wpdb->prepare( $sql, [] ) );
+		$result = $wpdb->prepare( $sql, [] );
 
 		if ( ! $result ) {
 			throw new Exception( 'Could not create database ' . $this->table_name );
@@ -100,9 +100,9 @@ abstract class Helper {
 	protected function does_table_exist() {
 		global $wpdb;
 
-		$query  = "SHOW TABLES LIKE '%s';";
-		$values = [$this->table_name];
-		$result = $wpdb->get_var( $wpdb->prepare( $query, $values ), 0, 0 );
+		$find_tables = "SHOW TABLES LIKE '%s';";
+		$values      = [ $this->table_name ];
+		$result      = $wpdb->prepare( $find_tables, $values );
 
 		if ( $result ) {
 			return true;
