@@ -1,6 +1,6 @@
 <?php
 
-class Example_Custom_Database extends Jay_Custom_Database_Helper {
+class Example_Custom_Database extends \Jay\Custom\Database\Helper {
 
     public function __construct(){
         $this->latest_version = 3;

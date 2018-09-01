@@ -1,6 +1,6 @@
 <?php
-
-abstract class Jay_Custom_Database_Helper {
+NameSpace Jay\Custom\Database;
+abstract class Helper {
 	protected $table_name;
 	protected $table_name_without_prefix;
 	protected $version_option_name;
@@ -8,7 +8,7 @@ abstract class Jay_Custom_Database_Helper {
 	protected $latest_version;
 
 	/**
-	 * @var jay_custom_database_helper_field[]
+	 * @var helper_field[]
 	 */
 	protected $fields;
 
