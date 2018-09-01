@@ -60,26 +60,11 @@ abstract class Helper {
 	protected function upgrade_database_loop( $current_version ) {
 		while ( $current_version < $this->latest_version ) {
 			$current_version++;
-			$this->upgrade_database( $current_version );
+			$this->upgrade_database_version( $current_version );
 
 			update_option( $this->version_option_name, $current_version, 'true' );
 		}
 		return true;
-	}
-
-	protected function upgrade_database( $target_version ) {
-		global $wpdb;
-
-		$sql = $this->get_upgrade_sql( $target_version );
-		if ( ! $sql ) {
-			throw new Exception( 'Could not get SQL version ' . $target_version . ' for database ' . $this->table_name );
-		}
-
-		$result = $wpdb->prepare( $sql, [] );
-
-		if ( ! $result ) {
-			throw new Exception( 'Could not upgrade database ' . $this->table_name . ' to version ' . $target_version );
-		}
 	}
 
 	protected function initalise_database() {
@@ -89,12 +74,7 @@ abstract class Helper {
 			throw new Exception( 'Database ' . $this->table_name . ' already exists' );
 		}
 
-		$sql    = $this->get_upgrade_sql( 1 );
-		$result = $wpdb->prepare( $sql, [] );
-
-		if ( ! $result ) {
-			throw new Exception( 'Could not create database ' . $this->table_name );
-		}
+		$this->upgrade_database_version(1 );
 	}
 
 	protected function does_table_exist() {
@@ -111,13 +91,7 @@ abstract class Helper {
 		}
 	}
 
-	abstract protected function get_upgrade_sql( $target_version );
-
-	protected function handle_errors( Exception $e ) {
-		if ( current_user_can( 'administrator' ) ) {
-			echo $e->getMessage();
-		}
-	}
+	abstract protected function upgrade_database_version( $target_version );
 
 	public function insert( $data ) {
 		foreach ( $this->fields as $field ) {

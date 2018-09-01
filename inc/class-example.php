@@ -17,32 +17,44 @@ class Example extends Helper {
 		parent::__construct( 'test_database' );
 	}
 
-	protected function get_upgrade_sql( $target_version ) {
-
-		$alter_table = "ALTER TABLE {$this->table_name} ";
+	protected function upgrade_database_version( $target_version ) {
+		global $wpdb;
 
 		switch ( $target_version ) {
 			case 1:
-				return "CREATE TABLE {$this->table_name} (
+				$result = $wpdb->prepare( "CREATE TABLE %s (
                   id INT NOT NULL AUTO_INCREMENT ,
                   name VARCHAR(255) NOT NULL ,
                   price MEDIUMINT NOT NULL ,
                   PRIMARY KEY (id)
                 )
-                ENGINE = InnoDB;";
+                ENGINE = InnoDB
+                ;", [
+                	$this->table_name,
+				] );
+				break;
 			case 2:
-				return "{$alter_table}
-                ADD
+				$result = $wpdb->prepare( "ALTER TABLE %s
+				ADD
                 description TEXT NULL
-                AFTER price;";
+                AFTER price
+				;", [
+					$this->table_name,
+				]);
+				break;
 			case 3:
-				return "{$alter_table}
-                ADD
+				$result = $wpdb->prepare( "ALTER TABLE %s
+				ADD
                 datetime DATETIME NULL,
                 datetime_utc DATETIME NULL
-                AFTER price;";
+                AFTER price;
+				;", [
+					$this->table_name,
+				] );
+				break;
 			default:
 				throw new Exception( 'Trying to get version SQL update for version ' . $target_version . ' for datbase ' . $this->table_name );
 		}
+		return $result->get_results();
 	}
 }
