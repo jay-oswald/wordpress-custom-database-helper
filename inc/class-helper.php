@@ -186,8 +186,7 @@ abstract class Helper {
 
 	public function query( $query ) {
 		global $wpdb;
-		$prepare = $wpdb->prepare( $query, [] );
-		$result  = $wpdb->query( $prepare );
+		$result  = $wpdb->query( $wpdb->prepare( $query, [] ) );
 
 		if ( $result === false ) { //returns num rows effected, so returns 0 if no rows effected
 			throw new Exception( "Error running query on {$this->table_name}, mysql error: {$wpdb->last_error}" );
