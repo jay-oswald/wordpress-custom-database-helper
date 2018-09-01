@@ -22,35 +22,29 @@ class Example extends Helper {
 
 		switch ( $target_version ) {
 			case 1:
-				$result = $wpdb->prepare( "CREATE TABLE %s (
+				$result = $wpdb->prepare( 'CREATE TABLE %s (
                   id INT NOT NULL AUTO_INCREMENT ,
                   name VARCHAR(255) NOT NULL ,
                   price MEDIUMINT NOT NULL ,
                   PRIMARY KEY (id)
                 )
                 ENGINE = InnoDB
-                ;", [
-                	$this->table_name,
-				] );
+                ;', [ $this->table_name, ] );
 				break;
 			case 2:
-				$result = $wpdb->prepare( "ALTER TABLE %s
+				$result = $wpdb->prepare( 'ALTER TABLE %s
 				ADD
                 description TEXT NULL
                 AFTER price
-				;", [
-					$this->table_name,
-				]);
+				;', [ $this->table_name, ] );
 				break;
 			case 3:
-				$result = $wpdb->prepare( "ALTER TABLE %s
+				$result = $wpdb->prepare( 'ALTER TABLE %s
 				ADD
                 datetime DATETIME NULL,
                 datetime_utc DATETIME NULL
                 AFTER price;
-				;", [
-					$this->table_name,
-				] );
+				;', [ $this->table_name ] );
 				break;
 			default:
 				throw new Exception( 'Trying to get version SQL update for version ' . $target_version . ' for datbase ' . $this->table_name );
